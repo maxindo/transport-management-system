@@ -13,6 +13,18 @@
             </form>
         </field>
     </record>
-    <act_window id="action_waybill_wizard_invoice" key2="client_action_multi" name="Create Customer Invoice" res_model="tms.wizard.invoice" src_model="tms.waybill" target="new" view_mode="form"/>
-    <act_window id="action_fuel_log_wizard_invoice" key2="client_action_multi" name="Create Customer Invoice" res_model="tms.wizard.invoice" src_model="fleet.vehicle.log.fuel" target="new" view_mode="form"/>
+    <act_window
+        id="action_waybill_wizard_invoice"
+        name="Create Customer Invoice"
+        res_model="tms.wizard.invoice"
+        binding_model="tms.waybill"
+        target="new"
+        view_mode="form"/>
+    <act_window
+        id="action_fuel_log_wizard_invoice"
+        name="Create Customer Invoice"
+        res_model="tms.wizard.invoice"
+        binding_model="fleet.vehicle.log.fuel"
+        target="new"
+        view_mode="form"/>
 </odoo>

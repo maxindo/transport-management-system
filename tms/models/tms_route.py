@@ -67,7 +67,6 @@ class TmsRoute(models.Model):
                         " the distance route."))
             rec.distance_empty = rec.distance - rec.distance_loaded
 
-    @api.multi
     def get_route_info(self, error=False):
         for rec in self:
             departure = {
@@ -123,7 +122,6 @@ class TmsRoute(models.Model):
             except Exception:
                 raise exceptions.UserError(_("Google Maps is not available."))
 
-    @api.multi
     def open_in_google(self):
         for route in self:
             points = (
@@ -142,7 +140,6 @@ class TmsRoute(models.Model):
                 'nodestroy': True,
                 'target': 'new'}
 
-    @api.multi
     def get_fuel_efficiency(self, vehicle_id, framework):
         for rec in self:
             fuel = self.env['tms.route.fuelefficiency']

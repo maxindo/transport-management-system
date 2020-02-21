@@ -19,7 +19,7 @@
         <field name='name'>tms.toll.data.tree</field>
         <field name='model'>tms.toll.data</field>
         <field name='arch' type='xml'>
-            <tree string='Toll Data' colors="green:state=='open';red:state=='closed'" create="0" edit="0">
+            <tree string='Toll Data' decoration-sucess="state=='open'" decoration-danger="state=='closed'" create="0" edit="0">
                 <field name="name" readonly="1"/>
                 <field name="num_tag" readonly="1"/>
                 <field name="economic_number" readonly="1"/>
@@ -33,7 +33,6 @@
     <record id='action_toll_data' model='ir.actions.act_window'>
         <field name='name'>Iave toll data</field>
         <field name='res_model'>tms.toll.data</field>
-        <field name='view_type'>form</field>
         <field name='view_mode'>tree</field>
     </record>
     <menuitem id="menu_tms_settings_toll_data" name="Iave information" parent="tms.menu_tms_settings" sequence="50"/>

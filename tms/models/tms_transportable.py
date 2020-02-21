@@ -13,7 +13,6 @@ class TmsTransportable(models.Model):
     uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure ', required=True)
 
-    @api.multi
     def copy(self, default=None):
         default = dict(default or {})
         copied_count = self.search_count(

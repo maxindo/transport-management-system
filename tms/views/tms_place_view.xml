@@ -36,7 +36,6 @@
     <record id="open_view_tms_place_form" model="ir.actions.act_window">
         <field name="name">TMS Places</field>
         <field name="res_model">tms.place</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem action="open_view_tms_place_form" id="menu_tms_settings_route_place_form" name="Places" parent="menu_tms_settings_routes" sequence="1"/>

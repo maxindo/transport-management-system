@@ -46,7 +46,6 @@ class HrEmployee(models.Model):
             delta = date - now
             rec.days_to_expire = delta.days if delta.days > 0 else 0
 
-    @api.multi
     def get_driver_license_info(self):
         client = Socrata("www.datossct.gob.mx", None)
         for rec in self:

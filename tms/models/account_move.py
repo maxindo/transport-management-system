@@ -1,13 +1,15 @@
 # Copyright 2017, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import api, models
+from odoo import fields, models
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    @api.multi
+    waybill_ids = fields.One2many(
+        'tms.waybill', 'invoice_id', string="Waybills", readonly=True)
+
     def unlink(self):
         for rec in self:
             advances = self.env['tms.advance'].search(
@@ -17,12 +19,15 @@ class AccountMove(models.Model):
             loans = self.env['tms.expense.loan'].search(
                 [('payment_move_id', '=', rec.id)])
             if advances:
-                for advance in advances:
-                    advance.paid = False
+                advances.write({
+                    'paid': False,
+                })
             if expenses:
-                for expense in expenses:
-                    expense.paid = False
+                expenses.write({
+                    'paid': False,
+                })
             if loans:
-                for loan in loans:
-                    loan.paid = False
+                loans.write({
+                    'paid': False,
+                })
             return super(AccountMove, self).unlink()

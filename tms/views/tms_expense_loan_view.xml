@@ -5,7 +5,7 @@
         <field name="model">tms.expense.loan</field>
         <field name="priority">2</field>
         <field name="arch" type="xml">
-            <tree string="Drivers Loans" colors="red:state=='draft';gray:state=='cancel';green:state=='approve';blue:state=='confirm';">
+            <tree string="Drivers Loans" decoration-danger="state=='draft'" decoration-muted="state=='cancel'" decoration-success="state=='approve'" decoration-info="state=='confirm'">
                 <field name="name"/>
                 <field name="date"/>
                 <field name="employee_id"/>
@@ -152,7 +152,6 @@
         <field name="name">Drivers Loans</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">tms.expense.loan</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form,graph</field>
         <field name="search_view_id" ref="view_tms_expense_loan_filter"/>
         <field name="help">Driver Loans</field>

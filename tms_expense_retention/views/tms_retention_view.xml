@@ -45,7 +45,6 @@
         <field name="name">Retentions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">tms.retention</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help">In this menu you will create retentions to be taken automatically when you create a driver expense.</field>
     </record>

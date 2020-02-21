@@ -65,7 +65,6 @@ class TmsFactor(models.Model):
         }
         self.name = values.get(self.factor_type)
 
-    @api.multi
     def get_driver_amount(self, employee, driver_value, amount):
         if not employee:
             raise ValidationError(_(
@@ -78,7 +77,6 @@ class TmsFactor(models.Model):
         amount += driver_value * (employee.income_percentage / 100)
         return amount
 
-    @api.multi
     def get_amount(self, weight=0.0, distance=0.0, distance_real=0.0, qty=0.0,
                    volume=0.0, income=0.0, employee=False):
         factor_list = {'weight': weight, 'distance': distance,

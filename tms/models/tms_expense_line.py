@@ -74,7 +74,7 @@ class TmsExpenseLine(models.Model):
     invoice_date = fields.Date()
     invoice_number = fields.Char()
     invoice_id = fields.Many2one(
-        'account.invoice',
+        'account.move',
         string='Supplier Invoice')
     product_id = fields.Many2one(
         'product.product',

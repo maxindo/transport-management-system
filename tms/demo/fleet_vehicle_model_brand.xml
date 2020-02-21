@@ -2,39 +2,39 @@
 <odoo>
     <record id="fleet_vehicle_model_brand_kenworth" model="fleet.vehicle.model.brand">
         <field name="name">Kenworth</field>
-        <field name="image" type="base64" file="tms/static/src/img/brand_kenworth-image.png"/>
+        <field name="image_128" type="base64" file="tms/static/src/img/brand_kenworth-image.png"/>
     </record>
     <record id="fleet_vehicle_model_brand_international" model="fleet.vehicle.model.brand">
         <field name="name">International</field>
-        <field name="image" type="base64" file="tms/static/src/img/brand_international-image.png"/>
+        <field name="image_128" type="base64" file="tms/static/src/img/brand_international-image.png"/>
     </record>
     <record id="fleet_vehicle_model_brand_freightliner" model="fleet.vehicle.model.brand">
         <field name="name">Freightliner</field>
-        <field name="image" type="base64" file="tms/static/src/img/brand_freightliner-image.png"/>
+        <field name="image_128" type="base64" file="tms/static/src/img/brand_freightliner-image.png"/>
     </record>
     <record id="fleet_vehicle_model_brand_mack" model="fleet.vehicle.model.brand">
         <field name="name">Mack</field>
-        <field name="image" type="base64" file="tms/static/src/img/brand_mack-image.png"/>
+        <field name="image_128" type="base64" file="tms/static/src/img/brand_mack-image.png"/>
     </record>
     <record id="fleet_vehicle_model_brand_peterbilt" model="fleet.vehicle.model.brand">
         <field name="name">Peterbilt</field>
-        <field name="image" type="base64" file="tms/static/src/img/brand_peterbilt-image.png"/>
+        <field name="image_128" type="base64" file="tms/static/src/img/brand_peterbilt-image.png"/>
     </record>
     <record id="fleet_vehicle_model_brand_scania" model="fleet.vehicle.model.brand">
         <field name="name">Scania</field>
-        <field name="image" type="base64" file="tms/static/src/img/brand_scania-image.png"/>
+        <field name="image_128" type="base64" file="tms/static/src/img/brand_scania-image.png"/>
     </record>
     <record id="fleet_vehicle_model_brand_fluehauf" model="fleet.vehicle.model.brand">
         <field name="name">Fluehauf</field>
-        <field name="image" type="base64" file="tms/static/src/img/brand_fluehauf-image.png"/>
+        <field name="image_128" type="base64" file="tms/static/src/img/brand_fluehauf-image.png"/>
     </record>
     <record id="fleet_vehicle_model_brand_trailmobile" model="fleet.vehicle.model.brand">
         <field name="name">Trailmobile</field>
-        <field name="image" type="base64" file="tms/static/src/img/brand_trailmobile-image.png"/>
+        <field name="image_128" type="base64" file="tms/static/src/img/brand_trailmobile-image.png"/>
     </record>
     <record id="fleet_vehicle_model_brand_trailking" model="fleet.vehicle.model.brand">
         <field name="name">Trail King</field>
-        <field name="image" type="base64" file="tms/static/src/img/brand_trailking-image.png"/>
+        <field name="image_128" type="base64" file="tms/static/src/img/brand_trailking-image.png"/>
     </record>
     <record id="fleet_vehicle_model_t370" model="fleet.vehicle.model">
         <field name="name">T370</field>

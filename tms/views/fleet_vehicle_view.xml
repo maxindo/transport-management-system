@@ -26,15 +26,16 @@
                     <h4><center>The date of the insurance policy is expired</center></h4>
                 </div>
             </xpath>
-            <field name="driver_id" position="replace">
-                <field invisible="1" name="driver_id"/>
-                <field domain="[('driver', '=', True)]" name="employee_id"/>
-            </field>
-            <field name="driver_id" position="before">
-                <field name="operating_unit_id" required="1"/>
-                <field name="fleet_type" required="1"/>
-            </field>
-            <xpath expr="//sheet/group[2]" position="replace">
+            <xpath expr="//sheet/group" position="replace">
+                <group string="Driver">
+                    <field name="active" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="driver_id" invisible="1" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
+                    <field name="operating_unit_id" required="1"/>
+                    <field name="fleet_type" required="1"/>
+                    <field domain="[('driver', '=', True)]" name="employee_id"/>
+                    <field name="location"/>
+                </group>
                 <notebook>
                     <page string="General Information">
                         <group>
@@ -122,7 +123,6 @@
     <record id="action_fleet_vehicle_tms" model="ir.actions.act_window">
         <field name="name">Fleet Vehicle</field>
         <field name="res_model">fleet.vehicle</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem action="action_fleet_vehicle_tms" id="tms_fleet_vehicle_menu" name="Units" parent="menu_tms_settings_unit" sequence="10"/>

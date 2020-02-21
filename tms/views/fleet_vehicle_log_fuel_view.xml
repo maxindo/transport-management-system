@@ -87,7 +87,7 @@
                 <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
                 <filter name="vendor_id_group_by" context="{'group_by':'vendor_id'}" string="Supplier"/>
                 <filter name="vehicle_id_group_by" context="{'group_by':'vehicle_id'}" string="Vehicle"/>
-                <filter name="employee_id_group_by" context="{'group_by':'employee_id'}" string="Driver"/>
+                <filter name="driver_id_group_by" context="{'group_by':'employee_id'}" string="Driver"/>
                 <filter name="travel_id_group_by" context="{'group_by':'travel_id'}" string="Travel"/>
                 <filter name="state_group_by" context="{'group_by': 'state'}" string="State"/>
                 <filter name="expense_id" context="{'group_by': 'expense_id'}" string="Expense Record"/>
@@ -115,7 +115,6 @@
         <field name="name">Fuel Log</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">fleet.vehicle.log.fuel</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="fleet_vehicle_log_fuel_filter_search"/>

@@ -41,7 +41,7 @@
         <field name="model">tms.travel</field>
         <field name="priority">1</field>
         <field name="arch" type="xml">
-            <tree colors="gray:state=='cancel';red:state=='draft';green:state=='progress';blue:state=='done';" string="Travels">
+            <tree decoration-muted="state=='cancel'" decoration-danger="state=='draft'" decoration-success="state=='progress'" decoration-info="state=='done'" string="Travels">
                 <field name="name"/>
                 <field name="date"/>
                 <field name="unit_id"/>
@@ -62,7 +62,7 @@
         <field name="model">tms.travel</field>
         <field name="priority">2</field>
         <field name="arch" type="xml">
-            <tree colors="gray:state=='cancel';red:state=='draft';green:state=='progress';blue:state=='done';" string="Travels">
+            <tree decoration-muted="state=='cancel'" decoration-danger="state=='draft'" decoration-success="state=='progress'" decoration-info="state=='done'" string="Travels">
                 <field name="name"/>
                 <field name="date"/>
                 <field name="unit_id" string="Unit"/>
@@ -83,7 +83,7 @@
         <field name="model">tms.travel</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
-            <tree colors="gray:state=='cancel';red:state=='draft';green:state=='progress';blue:state=='done';" string="Travels">
+            <tree decoration-muted="state=='cancel'" decoration-danger="state=='draft'" decoration-success="state=='progress'" decoration-info="state=='done'" string="Travels">
                 <field name="name"/>
                 <field name="date"/>
                 <field name="unit_id" string="Unit"/>
@@ -160,7 +160,7 @@
                     <notebook colspan="4">
                         <page string="Vehicle log fuel">
                             <field name="fuel_log_ids" attrs="{'readonly':[('state','in',('done', 'closed'))]}" nolabel="1" context="{'default_travel_id':active_id, 'default_operating_unit_id':operating_unit_id}">
-                              <tree colors="red:state=='cancel'; green:state=='approved';blue:state=='confirmed';">
+                              <tree decoration-danger="state=='cancel'" decoration-success="state=='approved'" decoration-info="state=='confirmed'">
                                     <field name='name'/>
                                     <field name='employee_id'/>
                                     <field name='vendor_id'/>
@@ -177,7 +177,7 @@
                         <page string="Waybills">
                             <group>
                                 <field name="waybill_ids" attrs="{'readonly':[('state','in',('done', 'closed'))]}" nolabel="1">
-                                    <tree colors="red:state=='cancel';green:state=='approved';blue:state=='confirmed';" string="Waybills">
+                                    <tree decoration-danger="state=='cancel'" decoration-success="state=='approved'" decoration-info="state=='confirmed'" string="Waybills">
                                         <button icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
                                         <button icon="gtk-ok" name="action_confirm" states="approved" string="Confirm" type="object"/>
                                         <field name="state"/>
@@ -367,14 +367,12 @@
     <record id="open_view_tms_travel_form" model="ir.actions.act_window">
         <field name="name">TMS Travel</field>
         <field name="res_model">tms.travel</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form,kanban,calendar,graph</field>
         <field name="context">{}</field>
     </record>
     <record id="open_view_tms_travel_report" model="ir.actions.act_window">
         <field name="name">TMS Travel</field>
         <field name="res_model">tms.travel</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_tms_travel_tree_report"/>
         <field name="context">{&quot;search_default_progress&quot;:1, 'search_default_date_dispatched': 1}</field>

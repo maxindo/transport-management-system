@@ -83,11 +83,11 @@ class TmsWaybill(models.Model):
     upload_point = fields.Char(change_default=True)
     download_point = fields.Char(change_default=True)
     invoice_id = fields.Many2one(
-        'account.invoice', readonly=True, copy=False)
+        'account.move', readonly=True, copy=False)
     invoice_paid = fields.Boolean(
         compute="_compute_invoice_paid", readonly=True)
     supplier_invoice_id = fields.Many2one(
-        'account.invoice', string='Supplier Invoice', readonly=True)
+        'account.move', string='Supplier Invoice', readonly=True)
     supplier_invoice_paid = fields.Boolean()
     waybill_line_ids = fields.One2many(
         'tms.waybill.line', 'waybill_id',
@@ -171,7 +171,6 @@ class TmsWaybill(models.Model):
     waybill_extradata_ids = fields.One2many(
         'tms.extradata', 'waybill_id',
         string='Extra Data Fields',
-        oldname='waybill_extradata',
         copy=True,
         states={'confirmed': [('readonly', True)]})
 
@@ -207,7 +206,6 @@ class TmsWaybill(models.Model):
         waybill.onchange_waybill_line_ids()
         return waybill
 
-    @api.multi
     def write(self, values):
         for rec in self:
             if 'partner_id' in values:
@@ -225,13 +223,11 @@ class TmsWaybill(models.Model):
             self.partner_invoice_id = self.partner_id.address_get(
                 ['invoice', 'contact']).get('invoice', False)
 
-    @api.multi
     def action_approve(self):
         for waybill in self:
             waybill.state = 'approved'
             self.message_post(body=_("<h5><strong>Aprroved</strong></h5>"))
 
-    @api.multi
     @api.depends('invoice_id')
     def _compute_invoice_paid(self):
         for rec in self:
@@ -277,7 +273,6 @@ class TmsWaybill(models.Model):
                                 waybill.product_volume, waybill.amount_total))
             return total_get_amount
 
-    @api.multi
     def _compute_amount_all(self, category):
         for waybill in self:
             field = 0.0
@@ -329,7 +324,6 @@ class TmsWaybill(models.Model):
         for waybill in self:
             waybill.amount_total = waybill.amount_untaxed + waybill.amount_tax
 
-    @api.multi
     def action_confirm(self):
         for waybill in self:
             if not waybill.travel_ids:
@@ -364,7 +358,6 @@ class TmsWaybill(models.Model):
                 tax_lines += tax_lines.new(tax)
             waybill.tax_line_ids = tax_lines
 
-    @api.multi
     def action_cancel_draft(self):
         for waybill in self:
             for travel in waybill.travel_ids:
@@ -376,7 +369,6 @@ class TmsWaybill(models.Model):
                 body=_("<h5><strong>Cancel to Draft</strong></h5>"))
             waybill.state = 'draft'
 
-    @api.multi
     def action_cancel(self):
         for waybill in self:
             if waybill.invoice_id and waybill.invoice_id.state != 'cancel':
@@ -389,7 +381,6 @@ class TmsWaybill(models.Model):
             waybill.message_post(
                 body=_("<h5><strong>Cancelled</strong></h5>"))
 
-    @api.multi
     def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):
         total = str(float(amount_total)).split('.')[0]
         decimals = str(float(amount_total)).split('.')[1]

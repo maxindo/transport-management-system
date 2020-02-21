@@ -44,19 +44,16 @@ class TmsEvent(models.Model):
         states={'confirmed': [('readonly', True)],
                 'cancel': [('readonly', True)]})
 
-    @api.multi
     def action_confirm(self):
         for rec in self:
             rec.message_post(body=_('<b>Event Confirmed.</b>'))
             rec.state = 'confirm'
 
-    @api.multi
     def action_cancel(self):
         for rec in self:
             rec.message_post(body=_('<b>Event Cancelled.</b>'))
             rec.state = 'cancel'
 
-    @api.multi
     def set_2_draft(self):
         for rec in self:
             rec.message_post(body=_('<b>Event Draft.</b>'))

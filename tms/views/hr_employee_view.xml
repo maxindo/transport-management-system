@@ -34,7 +34,6 @@
     <record id="tms_open_view_employee_list" model="ir.actions.act_window">
         <field name="name">Drivers</field>
         <field name="res_model">hr.employee</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('driver','=',True)]</field>
         <field name="context">{}</field>

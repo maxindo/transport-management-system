@@ -191,12 +191,10 @@ class TmsTravel(models.Model):
         for rec in self:
             rec.distance_driver = rec.distance_empty + rec.distance_loaded
 
-    @api.multi
     def action_draft(self):
         for rec in self:
             rec.state = "draft"
 
-    @api.multi
     def action_progress(self):
         for rec in self:
             rec.validate_driver_license()
@@ -212,7 +210,6 @@ class TmsTravel(models.Model):
             rec.date_start_real = fields.Datetime.now()
             rec.message_post(body=_('Travel Dispatched'))
 
-    @api.multi
     def action_done(self):
         for rec in self:
             odometer = self.env['fleet.vehicle.odometer'].create({
@@ -228,7 +225,6 @@ class TmsTravel(models.Model):
             rec.date_end_real = fields.Datetime.now()
             rec.message_post(body=_('Travel Finished'))
 
-    @api.multi
     def action_cancel(self):
         for rec in self:
             advances = rec.advance_ids.search([
@@ -304,7 +300,6 @@ class TmsTravel(models.Model):
             else:
                 rec.framework = 'unit'
 
-    @api.multi
     def validate_driver_license(self):
         val = self.env['ir.config_parameter'].get_param(
             'driver_license_security_days')
@@ -318,7 +313,6 @@ class TmsTravel(models.Model):
                         rec.employee_id.name,
                         rec.employee_id.license_expiration, val))
 
-    @api.multi
     def validate_vehicle_insurance(self):
         val = self.env['ir.config_parameter'].get_param(
             'tms_vehicle_insurance_security_days')
@@ -337,7 +331,6 @@ class TmsTravel(models.Model):
                         rec.unit_id.name, rec.unit_id.insurance_expiration,
                         val))
 
-    @api.multi
     def copy(self, default=None):
         default = dict(default or {})
         default['waybill_ids'] = False

@@ -40,7 +40,6 @@ class TmsWizardPayment(models.TransientModel):
                     obj.date)
             rec.amount_total = amount_total
 
-    @api.multi
     def make_payment(self):
         active_ids = self.env[self._context.get('active_model')].browse(
             self._context.get('active_ids'))
@@ -118,7 +117,6 @@ class TmsWizardPayment(models.TransientModel):
             # Creating moves and reconciles method explained above
             rec.create_moves_and_reconciles(move, active_ids)
 
-    @api.multi
     def _create_payment(self, counterpart_move_line, record):
         obj_payment = self.env['account.payment']
         payment_id = obj_payment.create({
@@ -134,7 +132,6 @@ class TmsWizardPayment(models.TransientModel):
         })
         counterpart_move_line['payment_id'] = payment_id.id
 
-    @api.multi
     def create_counterpart(self, model_amount, currency, obj,
                            amount_currency, amount_bank,
                            counterpart_move_line):
@@ -163,7 +160,6 @@ class TmsWizardPayment(models.TransientModel):
                 counterpart_move_line['debit'] = value
         return counterpart_move_line, amount_bank
 
-    @api.multi
     def create_moves_and_reconciles(self, move, active_ids):
         payments = {}
         for line in move.get('line_ids'):

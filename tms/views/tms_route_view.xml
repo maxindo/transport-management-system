@@ -103,7 +103,6 @@
     <record id="open_view_tms_route_form" model="ir.actions.act_window">
         <field name="name">TMS Routes</field>
         <field name="res_model">tms.route</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem action="open_view_tms_route_form" id="menu_tms_settings_route_form" name="Routes" parent="tms.menu_tms_settings_routes" sequence="10"/>

@@ -5,7 +5,7 @@
         <field name="model">tms.expense.line</field>
         <field name="priority">2</field>
         <field name="arch" type="xml">
-            <tree colors="blue:line_type=='salary';green:line_type=='fuel';gray:line_type=='madeup_expense';red:price_total&lt;0;" string="Expense Lines">
+            <tree decoration-info="line_type=='salary'" decoration-success="line_type=='fuel'" decoration-muted="line_type=='madeup_expense'" decoration-danger="price_total&lt;0" string="Expense Lines">
                 <field name='travel_id' readonly='1'/>
                     <field name='line_type'/>
                     <field name='product_id'/>
@@ -77,7 +77,6 @@
         <field name="name">Travel Expenses Line</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">tms.expense.line</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_tms_expense_line_filter"/>
         <field name="help">TMS Travel Expenses Line</field>

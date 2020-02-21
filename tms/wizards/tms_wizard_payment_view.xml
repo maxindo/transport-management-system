@@ -23,27 +23,24 @@
         </field>
     </record>
     <act_window 
-        id="action_view_advance_payment" 
-        key2="client_action_multi" 
-        name="Make Advance Payment." 
-        res_model="tms.wizard.payment" 
-        src_model="tms.advance" 
+        id="action_view_advance_payment"
+        name="Make Advance Payment."
+        res_model="tms.wizard.payment"
+        binding_model="tms.advance"
+        target="new"
+        view_mode="form"/>
+    <act_window 
+        id="action_view_expense_payment"
+        name="Make Driver Expense Payment."
+        res_model="tms.wizard.payment"
+        binding_model="tms.expense"
         target="new" 
         view_mode="form"/>
     <act_window 
-        id="action_view_expense_payment" 
-        key2="client_action_multi" 
-        name="Make Driver Expense Payment." 
-        res_model="tms.wizard.payment" 
-        src_model="tms.expense" 
-        target="new" 
-        view_mode="form"/>
-    <act_window 
-        id="action_view_expense_loan_payment" 
-        key2="client_action_multi" 
-        name="Make Loan Expense Payment." 
-        res_model="tms.wizard.payment" 
-        src_model="tms.expense.loan" 
-        target="new" 
+        id="action_view_expense_loan_payment"
+        name="Make Loan Expense Payment."
+        res_model="tms.wizard.payment"
+        binding_model="tms.expense.loan"
+        target="new"
         view_mode="form"/>
 </odoo>

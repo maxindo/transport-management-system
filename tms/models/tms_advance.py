@@ -37,7 +37,7 @@ class TmsAdvance(models.Model):
         store=True,)
     employee_id = fields.Many2one(
         'hr.employee',
-        compute='_compute_employee_id',
+        compute='_compute_driver_id',
         string='Driver',
         store=True,)
     amount = fields.Monetary(required=True)
@@ -72,14 +72,13 @@ class TmsAdvance(models.Model):
         'res.company', required=True,
         default=lambda self: self.env.user.company_id)
 
-    @api.multi
     @api.depends('travel_id')
     def _compute_unit_id(self):
         for rec in self:
             rec.unit_id = rec.travel_id.unit_id.id
 
     @api.depends('travel_id')
-    def _compute_employee_id(self):
+    def _compute_driver_id(self):
         for rec in self:
             rec.employee_id = rec.travel_id.employee_id.id
 
@@ -110,12 +109,10 @@ class TmsAdvance(models.Model):
                 status = True
             rec.paid = status
 
-    @api.multi
     def action_authorized(self):
         for rec in self:
             rec.state = 'approved'
 
-    @api.multi
     def action_approve(self):
         for rec in self:
             if rec.amount > rec.operating_unit_id.credit_limit:
@@ -124,7 +121,6 @@ class TmsAdvance(models.Model):
                 rec.state = 'approved'
                 rec.message_post(_('<strong>Advance approved.</strong>'))
 
-    @api.multi
     def action_confirm(self):
         obj_account_move = self.env['account.move']
         for rec in self:
@@ -203,7 +199,6 @@ class TmsAdvance(models.Model):
             rec.message_post(
                 _('<strong>Advance confirmed.</strong>'))
 
-    @api.multi
     def action_cancel(self):
         for rec in self:
             if rec.paid:
@@ -218,7 +213,6 @@ class TmsAdvance(models.Model):
             rec.state = 'cancel'
             rec.message_post(_('<strong>Advance cancelled.</strong>'))
 
-    @api.multi
     def action_cancel_draft(self):
         for rec in self:
             if rec.travel_id.state == 'cancel':
@@ -228,7 +222,6 @@ class TmsAdvance(models.Model):
             rec.state = 'draft'
             rec.message_post(_('<strong>Advance drafted.</strong>'))
 
-    @api.multi
     def action_pay(self):
         for rec in self:
             bank = self.env['account.journal'].search(

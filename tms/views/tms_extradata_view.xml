@@ -30,7 +30,6 @@
     <record id="open_view_tms_extradata_form" model="ir.actions.act_window">
         <field name="name">TMS Extra Fields</field>
         <field name="res_model">tms.extradata</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 </odoo>

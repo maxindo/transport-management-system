@@ -19,7 +19,8 @@ class TmsExpenseLoan(models.Model):
         default=fields.Date.context_today)
     date_confirmed = fields.Date(
         readonly=True,
-        related='move_id.date')
+        related='move_id.date',
+        string='Date Confirmed')
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True)
     expense_ids = fields.Many2many(
@@ -90,12 +91,10 @@ class TmsExpenseLoan(models.Model):
         loan.name = sequence.next_by_id()
         return loan
 
-    @api.multi
     def action_authorized(self):
         for rec in self:
             rec.state = 'approved'
 
-    @api.multi
     def action_approve(self):
         for rec in self:
             if rec.discount_type == 'fixed' and rec.fixed_discount <= 0.0:
@@ -110,7 +109,6 @@ class TmsExpenseLoan(models.Model):
             rec.state = 'approved'
             rec.message_post(_('<strong>Loan approved.</strong>'))
 
-    @api.multi
     def action_cancel(self):
         for rec in self:
             if rec.paid:
@@ -128,7 +126,6 @@ class TmsExpenseLoan(models.Model):
             rec.state = 'cancel'
             rec.message_post(_('<strong>Loan cancelled.</strong>'))
 
-    @api.multi
     def action_confirm(self):
         for loan in self:
             obj_account_move = self.env['account.move']
@@ -199,7 +196,6 @@ class TmsExpenseLoan(models.Model):
                 self.message_post(
                     _('<strong>Loan confirmed.</strong>'))
 
-    @api.multi
     def action_cancel_draft(self):
         for rec in self:
             rec.state = 'draft'
@@ -218,7 +214,6 @@ class TmsExpenseLoan(models.Model):
             if loan.balance <= 0.0:
                 loan.write({'state': 'closed'})
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state == 'confirmed' or rec.state == 'closed':
@@ -234,7 +229,6 @@ class TmsExpenseLoan(models.Model):
             if rec.payment_move_id.id:
                 rec.paid = True
 
-    @api.multi
     def action_pay(self):
         for rec in self:
             bank = self.env['account.journal'].search(

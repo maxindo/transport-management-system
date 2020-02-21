@@ -22,7 +22,7 @@ class FleetVehicle(models.Model):
     notes = fields.Text()
     employee_id = fields.Many2one(
         'hr.employee',
-        string="Driver",
+        string="Driver Employee",
         domain=[('driver', '=', True)])
     expense_ids = fields.One2many('tms.expense', 'unit_id', string='Expenses')
     engine_id = fields.Many2one('fleet.vehicle.engine', string='Engine')

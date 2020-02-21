@@ -39,7 +39,6 @@ class TmsPlace(models.Model):
             else:
                 rec.country_id = False
 
-    @api.multi
     def get_coordinates(self):
         for rec in self:
             if rec.name and rec.state_id:
@@ -59,7 +58,6 @@ class TmsPlace(models.Model):
             except Exception:
                 raise ValidationError(_("Google Maps is not available."))
 
-    @api.multi
     def open_in_google(self):
         for place in self:
             url = ("/tms/static/src/googlemaps/get_place_from_coords.html?" +

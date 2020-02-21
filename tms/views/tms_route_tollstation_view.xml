@@ -47,7 +47,6 @@
     <record id='action_tms_route_tollstation' model='ir.actions.act_window'>
         <field name='name'>Tollstations</field>
         <field name='res_model'>tms.route.tollstation</field>
-        <field name='view_type'>form</field>
         <field name='view_mode'>tree,form</field>
     </record>
     <menuitem id="tms_route_tollstation_menu" name="Toll Stations" parent="menu_tms_settings_routes" action="action_tms_route_tollstation"/>

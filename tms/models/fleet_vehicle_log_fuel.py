@@ -28,7 +28,7 @@ class FleetVehicleLogFuel(models.Model):
         'hr.employee',
         string='Driver',
         domain=[('driver', '=', True)],
-        compute='_compute_employee_id',
+        compute='_compute_driver_id',
         store=True,)
     odometer = fields.Float(related='vehicle_id.odometer',)
     product_uom_id = fields.Many2one('uom.uom', string='UoM')
@@ -42,7 +42,7 @@ class FleetVehicleLogFuel(models.Model):
     price_subtotal = fields.Float(
         string="Subtotal", compute='_compute_price_subtotal')
     invoice_id = fields.Many2one(
-        'account.invoice', string='Invoice', readonly=True)
+        'account.move', string='Invoice', readonly=True)
     invoice_paid = fields.Boolean(
         compute='_compute_invoiced_paid')
     operating_unit_id = fields.Many2one(
@@ -93,13 +93,11 @@ class FleetVehicleLogFuel(models.Model):
                     raise ValidationError(
                         _('Insufficient amount'))
 
-    @api.multi
     @api.depends('vehicle_id')
-    def _compute_employee_id(self):
+    def _compute_driver_id(self):
         for rec in self:
             rec.employee_id = rec.travel_id.employee_id
 
-    @api.multi
     @api.depends('tax_amount')
     def _compute_price_subtotal(self):
         for rec in self:
@@ -107,7 +105,6 @@ class FleetVehicleLogFuel(models.Model):
             if rec.tax_amount > 0:
                 rec.price_subtotal = rec.tax_amount / 0.16
 
-    @api.multi
     @api.depends('product_qty', 'price_subtotal')
     def _compute_price_unit(self):
         for rec in self:
@@ -116,7 +113,6 @@ class FleetVehicleLogFuel(models.Model):
                 rec.price_unit = rec.price_subtotal / rec.product_qty
             return rec.price_unit
 
-    @api.multi
     @api.depends('price_subtotal', 'tax_amount', 'price_total')
     def _compute_special_tax_amount(self):
         for rec in self:
@@ -125,13 +121,11 @@ class FleetVehicleLogFuel(models.Model):
                 rec.special_tax_amount = (
                     rec.price_total - rec.price_subtotal - rec.tax_amount)
 
-    @api.multi
     def action_approved(self):
         for rec in self:
             rec.message_post(body=_('<b>Fuel Voucher Approved.</b>'))
             rec.state = 'approved'
 
-    @api.multi
     def action_cancel(self):
         if self.mapped('invoice_id'):
             raise ValidationError(
@@ -156,13 +150,11 @@ class FleetVehicleLogFuel(models.Model):
         res.name = sequence.next_by_id()
         return res
 
-    @api.multi
     def set_2_draft(self):
         for rec in self:
             rec.message_post(body=_('<b>Fuel Voucher Draft.</b>'))
             rec.state = 'draft'
 
-    @api.multi
     def action_confirm(self):
         for rec in self:
             if (rec.product_qty <= 0 or
@@ -183,10 +175,9 @@ class FleetVehicleLogFuel(models.Model):
     def _compute_invoiced_paid(self):
         for rec in self:
             rec.invoice_paid = (
-                rec.invoice_id.id and
-                rec.invoice_id.state == 'paid')
+                rec.invoice_id and
+                rec.invoice_id.invoice_payment_state == 'paid')
 
-    @api.multi
     def _amount_to_text(self, product_qty):
         # TODO Use the Odoo method in the currency
         total = str(float(product_qty)).split('.')[0]

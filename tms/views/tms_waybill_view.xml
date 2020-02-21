@@ -5,7 +5,7 @@
         <field name="model">tms.waybill</field>
         <field name="priority">2</field>
         <field name="arch" type="xml">
-            <tree colors="gray:state=='cancel';red:state=='draft';green:state=='approved';" string="Waybills">
+            <tree decoration-muted="state=='cancel'" decoration-danger="state=='draft'" decoration-success="state=='approved'" string="Waybills">
                 <field name="name"/>
                 <field name="date_order"/>
                 <field name="partner_id"/>
@@ -339,7 +339,6 @@
         <field name="name">Waybills</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">tms.waybill</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,graph</field>
         <field name="search_view_id" ref="view_tms_waybill_filter"/>
         <field name="context">{&quot;search_default_user_id&quot;:uid, 'search_default_this_month': 1}</field>

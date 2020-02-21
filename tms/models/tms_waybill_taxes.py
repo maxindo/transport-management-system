@@ -2,8 +2,6 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-
-import odoo.addons.decimal_precision as dp
 from odoo import fields, models
 
 
@@ -21,7 +19,5 @@ class TmsWaybillTaxes(models.Model):
                 ('type', '<>', 'closed')])
     account_analytic_id = fields.Many2one(
         'account.analytic.account', 'Analytic account')
-    base = fields.Float(digits=dp.get_precision('Account'), readonly=True)
-    tax_amount = fields.Float(
-        digits=dp.get_precision('Account'),
-        readonly=True)
+    base = fields.Float(digits='Account', readonly=True)
+    tax_amount = fields.Float(digits='Account', readonly=True)

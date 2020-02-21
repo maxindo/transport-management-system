@@ -86,7 +86,6 @@
         <field name="name">Prepaid</field>
         <field name="res_model">fleet.vehicle.log.fuel.prepaid</field>
         <field name="context">{}</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem action="open_view_fleet_vehicle_log_fuel_prepaid_form" id="menu_fleet_vehicle_log_fuel_prepaid_form" name="Fuel Prepaid" parent="menu_tms_travels" sequence="10"/>

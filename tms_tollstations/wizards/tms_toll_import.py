@@ -75,7 +75,6 @@ class TmsTollImport(models.TransientModel):
                 _('Oops! The files must have .txt or .dat extensions'))
         return {
             'name': 'Toll station data',
-            'view_type': 'form',
             'view_mode': 'tree',
             'target': 'current',
             'res_model': 'tms.toll.data',

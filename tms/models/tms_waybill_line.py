@@ -52,7 +52,6 @@ class TmsWaybillLine(models.Model):
                 'account_id': rec.product_id.property_account_income_id.id
             })
 
-    @api.multi
     @api.depends('product_qty', 'unit_price', 'discount')
     def _compute_amount_line(self):
         for rec in self:

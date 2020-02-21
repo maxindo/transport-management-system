@@ -4,13 +4,11 @@
 
 {
     'name': 'Freight Management',
-    'version': '12.0.1.0.0',
+    'version': '13.0.1.0.0',
     'category': 'Transport',
     'author': 'Jarsa Sistemas, Argil Consulting',
     'website': 'https://www.jarsa.com.mx/page/transport-management-system',
     'depends': [
-        'account',
-        'account_cancel',
         'fleet',
         'hr',
         'account_operating_unit',
@@ -38,7 +36,6 @@
         'views/fleet_vehicle_log_fuel_prepaid_view.xml',
         'views/product_template_view.xml',
         'views/tms_advance_view.xml',
-        'views/tms_config_settings_view.xml',
         'views/tms_event_view.xml',
         'views/tms_expense_view.xml',
         'views/tms_expense_line_view.xml',
@@ -51,7 +48,7 @@
         'views/tms_unit_kit_view.xml',
         'views/tms_waybill_view.xml',
         'views/tms_extradata_view.xml',
-        'views/account_invoice_view.xml',
+        'views/account_move_view.xml',
         'views/tms_route_tollstation_view.xml',
         'views/fleet_vehicle_engine_view.xml',
         'views/tms_route_note_view.xml',
@@ -64,10 +61,10 @@
         'data/ir_config_parameter.xml',
     ],
     'demo': [
+        'demo/ir_sequence.xml',
         'demo/product_product.xml',
         'demo/product_template.xml',
         'demo/fleet_vehicle_odometer.xml',
-        'demo/ir_sequence.xml',
         'demo/operating_unit.xml',
         'demo/fleet_vehicle_engine.xml',
         'demo/fleet_vehicle_model_brand.xml',

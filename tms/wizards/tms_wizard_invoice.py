@@ -95,7 +95,6 @@ class TmsWizardInvoice(models.TransientModel):
         res['lines'] = lines
         return res
 
-    @api.multi
     def make_invoices(self):
         record_names = []
         currency_ids = []
@@ -128,13 +127,12 @@ class TmsWizardInvoice(models.TransientModel):
         if len(set(currency_ids)) > 1:
             raise exceptions.ValidationError(
                 _('The records must be of the same currency.'))
-        invoice_id = self.env['account.invoice'].create({
+        invoice_id = self.env['account.move'].create({
             'partner_id': res['partner_id'].id,
             'operating_unit_id': res['operating_unit_id'].id,
             'fiscal_position_id': res['fpos'].id,
             'journal_id': journal_id,
             'currency_id': currency_id,
-            'account_id': res['invoice_account'].id,
             'type': res['invoice_type'],
             'invoice_line_ids': [line for line in res['lines']],
         })
@@ -149,7 +147,6 @@ class TmsWizardInvoice(models.TransientModel):
         return {
             'name': 'Customer Invoice',
             'view_id': view.id,
-            'view_type': 'form',
             'view_mode': 'form',
             'target': 'current',
             'res_model': 'account.invoice',

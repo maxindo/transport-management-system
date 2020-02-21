@@ -12,7 +12,7 @@ class FleetVehicleLogFuelPrepaid(models.Model):
     name = fields.Char()
     price_total = fields.Float(string='Total')
     invoice_id = fields.Many2one(
-        'account.invoice', string='Invoice', readonly=True)
+        'account.move', string='Invoice', readonly=True)
     invoice_paid = fields.Boolean(
         compute='_compute_invoiced_paid')
     operating_unit_id = fields.Many2one(
@@ -55,7 +55,6 @@ class FleetVehicleLogFuelPrepaid(models.Model):
         res.name = sequence.next_by_id()
         return res
 
-    @api.multi
     @api.depends('log_fuel_ids')
     def _compute_balance(self):
         for rec in self:
@@ -73,30 +72,19 @@ class FleetVehicleLogFuelPrepaid(models.Model):
             if rec.invoice_id and rec.invoice_id.state == "paid":
                 rec.invoice_paid = True
 
-    @api.multi
     def action_confirm(self):
         for rec in self:
             rec.state = 'confirmed'
 
-    @api.multi
     def create_invoice(self):
         if self.mapped('invoice_id'):
             raise ValidationError(_('The record is already invoiced'))
-        obj_invoice = self.env['account.invoice']
+        obj_invoice = self.env['account.move']
         for rec in self:
             journal_id = rec.operating_unit_id.purchase_journal_id.id
             fpos = rec.vendor_id.property_account_position_id
-            invoice_account = fpos.map_account(
-                rec.vendor_id.property_account_payable_id)
-            if rec.product_id.property_account_income_id:
-                account = fpos.map_account(
-                    rec.product_id.property_account_income_id)
-            elif (rec.product_id.categ_id.
-                    property_account_income_categ_id):
-                account = fpos.map_account(
-                    rec.product_id.categ_id.
-                    property_account_income_categ_id)
-            else:
+            account = rec.product_id.get_product_accounts(fpos)['expense']
+            if not account['expense']:
                 raise ValidationError(
                     _('You must have an income account in the '
                       'product or its category.'))
@@ -106,7 +94,6 @@ class FleetVehicleLogFuelPrepaid(models.Model):
                 'fiscal_position_id': fpos.id,
                 'journal_id': journal_id,
                 'currency_id': rec.currency_id.id,
-                'account_id': invoice_account.id,
                 'type': 'in_invoice',
                 'invoice_line_ids': [(0, 0, {
                     'product_id': rec.product_id.id,
@@ -124,10 +111,9 @@ class FleetVehicleLogFuelPrepaid(models.Model):
 
             return {
                 'name': 'Customer Invoice',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'target': 'current',
-                'res_model': 'account.invoice',
+                'res_model': 'account.move',
                 'res_id': invoice_id.id,
                 'type': 'ir.actions.act_window'
             }

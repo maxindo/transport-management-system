@@ -458,14 +458,12 @@ class TmsExpense(models.Model):
         expense.name = sequence.next_by_id()
         return expense
 
-    @api.multi
     def write(self, values):
         for rec in self:
             res = super(TmsExpense, self).write(values)
             rec.get_travel_info()
             return res
 
-    @api.multi
     def unlink(self):
         if self.filtered(lambda rec: rec.state == 'confirmed'):
             raise ValidationError(
@@ -491,13 +489,11 @@ class TmsExpense(models.Model):
             })
             return super(TmsExpense, self).unlink()
 
-    @api.multi
     def action_approved(self):
         for rec in self:
             rec.message_post(body=_('<b>Expense Approved.</b>'))
         self.state = 'approved'
 
-    @api.multi
     def action_draft(self):
         for rec in self:
             rec.message_post(body=_('<b>Expense Drafted.</b>'))
@@ -544,7 +540,6 @@ class TmsExpense(models.Model):
             line.write({'expense_fuel_log': True})
             return fuel_voucher
 
-    @api.multi
     def higher_than_zero_move(self):
         for rec in self:
             move_lines = []
@@ -601,7 +596,6 @@ class TmsExpense(models.Model):
             }
             return result
 
-    @api.multi
     def check_expenseline_invoice(self, line, result, product_account):
         for rec in self:
             # We check if the expense line is an invoice to create it
@@ -668,7 +662,6 @@ class TmsExpense(models.Model):
                         rec.operating_unit_id.id)
                     result['move_lines'].append(move_line)
 
-    @api.multi
     def create_expense_line_move_line(self, line, result):
         for rec in self:
             # We only need all the lines except the fuel and the
@@ -697,7 +690,6 @@ class TmsExpense(models.Model):
                             ' product %s') % (line.product_id.name))
                 self.check_expenseline_invoice(line, result, product_account)
 
-    @api.multi
     def check_balance_value(self, result):
         for rec in self:
             balance = rec.amount_balance
@@ -731,7 +723,6 @@ class TmsExpense(models.Model):
                     rec.operating_unit_id.id)
             result['move_lines'].append(move_line)
 
-    @api.multi
     def reconcile_account_move(self, result):
         for rec in self:
             move = {
@@ -756,7 +747,6 @@ class TmsExpense(models.Model):
                     'state': 'confirmed'
                 })
 
-    @api.multi
     def action_confirm(self):
         for rec in self:
             if rec.move_id:
@@ -771,7 +761,6 @@ class TmsExpense(models.Model):
             rec.reconcile_account_move(result)
             rec.message_post(body=_('<b>Expense Confirmed.</b>'))
 
-    @api.multi
     def action_cancel(self):
         self.ensure_one()
         if self.paid:
@@ -800,7 +789,6 @@ class TmsExpense(models.Model):
                 lambda x: x.created_from_expense).unlink()
         self.state = 'cancel'
 
-    @api.multi
     def unattach_info(self):
         for rec in self:
             exp_no_travel = rec.expense_line_ids.search([
@@ -830,7 +818,6 @@ class TmsExpense(models.Model):
                 'state': 'confirmed',
             })
 
-    @api.multi
     def create_advance_line(self, advance, travel):
         if advance.state not in ('confirmed', 'cancel'):
             raise ValidationError(_(
@@ -873,7 +860,6 @@ class TmsExpense(models.Model):
                 'expense_id': self.id
             })
 
-    @api.multi
     def create_fuel_line(self, fuel_log, travel):
         if (fuel_log.state not in ['confirmed', 'closed']):
             raise ValidationError(_(
@@ -910,7 +896,6 @@ class TmsExpense(models.Model):
                 })
         return fuel_expense
 
-    @api.multi
     def create_salary_line(self, travel):
         for rec in self:
             product_id = self.env['product.product'].search([
@@ -933,7 +918,6 @@ class TmsExpense(models.Model):
                     'control': True
                 })
 
-    @api.multi
     def calculate_discounts(self, methods, loan):
         if loan.discount_type == 'fixed':
             total = loan.fixed_discount
@@ -963,7 +947,6 @@ class TmsExpense(models.Model):
                 total_discount = total
         return total_discount
 
-    @api.multi
     def get_expense_loan(self):
         loans = self.env['tms.expense.loan'].search([
             ('employee_id', '=', self.employee_id.id),
@@ -1015,7 +998,6 @@ class TmsExpense(models.Model):
                     })
                 loan.expense_ids += expense_line
 
-    @api.multi
     def get_travel_info(self):
         for rec in self:
             # Unattaching info from expense
@@ -1045,9 +1027,10 @@ class TmsExpense(models.Model):
                 for line in waybill.waybill_line_ids:
                     if line.product_id.apply_for_salary:
                         income += line.price_subtotal
-                if waybill.currency_id.name == 'USD':
-                    income = (income *
-                              self.env.user.company_id.expense_currency_rate)
+                # TODO: define a new module to apply this functionality
+                # if waybill.currency_id.name == 'USD':
+                #     income = (income *
+                #               self.env.user.company_id.expense_currency_rate)
                 if waybill.driver_factor_ids:
                     for factor in waybill.driver_factor_ids:
                         driver_salary += factor.get_amount(
@@ -1075,14 +1058,10 @@ class TmsExpense(models.Model):
                         travel.name))
             return driver_salary
 
-    @api.multi
     def create_supplier_invoice(self, line):
         journal_id = self.operating_unit_id.expense_journal_id.id
-        product_account = (
-            line.product_id.product_tmpl_id.property_account_expense_id.id)
-        if not product_account:
-            product_account = (
-                line.product_id.categ_id.property_account_expense_categ_id.id)
+        fpos = line.partner_id.property_account_position_id
+        product_account = line.product_id.get_product_accounts(fpos)['expense']
         if not product_account:
             raise ValidationError(
                 _('Error !'),
@@ -1099,20 +1078,16 @@ class TmsExpense(models.Model):
             'account_id': product_account,
             'quantity': line.product_qty,
             'price_unit': line.unit_price,
-            'invoice_line_tax_ids':
-            [(6, 0,
-                [x.id for x in line.tax_ids])],
+            'invoice_line_tax_ids': [(6, 0, line.tax_ids.ids)],
             'uom_id': line.product_uom_id.id,
             'product_id': line.product_id.id,
         })
         notes = line.expense_id.name + ' - ' + line.product_id.name
-        partner_account = line.partner_id.property_account_payable_id.id
         invoice = {
             'origin': line.expense_id.name,
             'type': 'in_invoice',
             'journal_id': journal_id,
             'reference': line.invoice_number,
-            'account_id': partner_account,
             'partner_id': line.partner_id.id,
             'invoice_line_ids': [invoice_line],
             'currency_id': line.expense_id.currency_id.id,
@@ -1126,11 +1101,10 @@ class TmsExpense(models.Model):
             'comment': notes,
             'operating_unit_id': line.expense_id.operating_unit_id.id,
         }
-        invoice_id = self.env['account.invoice'].create(invoice)
+        invoice_id = self.env['account.move'].create(invoice)
         line.invoice_id = invoice_id
         return invoice_id
 
-    @api.multi
     def reconcile_supplier_invoices(self, invoice_ids, move_id):
         move_line_obj = self.env['account.move.line']
         for invoice in invoice_ids:
@@ -1144,7 +1118,7 @@ class TmsExpense(models.Model):
                     _('Error ! Move line was not found,'
                         ' please check your data.'))
             move_ids.append(expense_move_line.id)
-            invoice_move_line_id = invoice.move_id.line_ids.filtered(
+            invoice_move_line_id = invoice.line_ids.filtered(
                 lambda x: x.account_id.reconcile)
             move_ids.append(invoice_move_line_id.id)
             reconcile_ids = move_line_obj.browse(move_ids)
@@ -1157,8 +1131,8 @@ class TmsExpense(models.Model):
             ('operating_unit_id', '=', self.operating_unit_id.id),
             ('state', '=', 'done'),
             ('unit_id', '=', self.unit_id.id)])
-        employee_ids = travels.mapped('employee_id').ids
-        if self.employee_id.id not in employee_ids:
+        driver_ids = travels.mapped('employee_id').ids
+        if self.employee_id.id not in driver_ids:
             self.employee_id = False
         tlines_units = self.travel_ids.mapped('unit_id').ids
         tlines_drivers = self.travel_ids.mapped('employee_id').ids
@@ -1168,11 +1142,10 @@ class TmsExpense(models.Model):
         return {
             'domain': {
                 'employee_id': [
-                    ('id', 'in', employee_ids), ('driver', '=', True)],
+                    ('id', 'in', driver_ids), ('driver', '=', True)],
             }
         }
 
-    @api.multi
     def get_amount_total(self):
         for rec in self:
             amount_subtotal = 0.0
@@ -1181,7 +1154,6 @@ class TmsExpense(models.Model):
                     amount_subtotal += line.price_subtotal
             return amount_subtotal
 
-    @api.multi
     def get_amount_tax(self):
         for rec in self:
             tax_amount = 0.0
@@ -1190,7 +1162,6 @@ class TmsExpense(models.Model):
                     tax_amount += line.tax_amount
             return tax_amount
 
-    @api.multi
     def get_value(self, type_line):
         for rec in self:
             value = 0.0
